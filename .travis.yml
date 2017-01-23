@@ -1,0 +1,38 @@
+# The language in this case has no bearing - we are going to be making use of conda for a
+# python distribution for the scientific python stack.
+language: generic
+
+sudo: false
+
+env:
+    global:
+       - CONDA_INSTALL_LOCN="${HOME}/conda"
+
+    matrix:
+        - PYTHON=2.7
+        - PYTHON=3.5
+        - PYTHON=3.6
+
+install:
+    - mkdir -p ${HOME}/cache/pkgs
+    - "[ ! -f ${HOME}/cache/miniconda.sh ] && wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O ${HOME}/cache/miniconda.sh || :"
+    - bash ${HOME}/cache/miniconda.sh -b -p ${CONDA_INSTALL_LOCN}
+    - source ${CONDA_INSTALL_LOCN}/bin/activate root
+
+    # Re-use the packages in the cache, and download any new ones into that location.
+    - rm -rf ${CONDA_INSTALL_LOCN}/pkgs && ln -s ${HOME}/cache/pkgs ${CONDA_INSTALL_LOCN}/pkgs
+
+    # Now do the things we need to do to install it.
+    - conda install python=${PYTHON} --yes --quiet -c conda-forge
+    - python setup.py install
+
+script:
+    - python -c "from cf_pinning import pinning"
+
+# We store the files that are downloaded from continuum.io, but not the environments that are created.
+cache:
+    directories:
+      - $HOME/cache
+before_cache:
+  # Remove all untarred directories.
+  - find $CONDA_INSTALL_LOCN/pkgs/ -mindepth 1 -maxdepth 1 -type d -exec rm -r {} \;
