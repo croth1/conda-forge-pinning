@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 
-__VERSION__ = '2017.1.23'
+__VERSION__ = '2017.2.18'
 
 setup(
     name='conda-forge-pinning',
@@ -10,6 +10,7 @@ setup(
     author_email='christian.roth@mpibpc.mpg.de',
     url='https://github.com/croth1/conda-forge-pinning',
     packages=find_packages(),
+    test_suite = 'nose.collector',
     include_package_data=True,
     zip_safe=False,
 )
