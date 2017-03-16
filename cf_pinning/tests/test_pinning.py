@@ -14,7 +14,7 @@ class TestReplacements(TestCase):
 
         # update to latest version
         run_repl = get_replacements(sections, 'run', pins=pinnings)
-        self.assertEqual(run_repl, {'- foo': '- foo 1.0'})
+        self.assertEqual(run_repl, [('foo', 'foo 1.0')])
 
     def test_star_pin(self):
         pinnings = {'foo': {'build': '1.0'}}
@@ -29,9 +29,9 @@ class TestReplacements(TestCase):
             '- boost-cpp 1.63.*\n'
             '- boost'
         )
-        replacements = dict([
+        replacements = [
             ('- boost', '- boost 1.63.*'),
-        ])
+        ]
 
         result = replace_strings(replacements, text)
         exp_result = (
@@ -44,9 +44,9 @@ class TestReplacements(TestCase):
         text = (
             '- foo 1.*  # [linux]'
         )
-        replacements = dict([
+        replacements = [
             ('- foo 1.*', '- foo 2.*'),
-        ])
+        ]
 
         result = replace_strings(replacements, text)
         exp_result = (
