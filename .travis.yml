@@ -23,11 +23,12 @@ install:
     - rm -rf ${CONDA_INSTALL_LOCN}/pkgs && ln -s ${HOME}/cache/pkgs ${CONDA_INSTALL_LOCN}/pkgs
 
     # Now do the things we need to do to install it.
-    - conda install python=${PYTHON} --yes --quiet -c conda-forge
+    - conda install python=${PYTHON} nose --yes --quiet -c conda-forge
     - python setup.py install
 
 script:
     - python -c "from cf_pinning import pinning"
+    - python setup.py test
 
 # We store the files that are downloaded from continuum.io, but not the environments that are created.
 cache:
